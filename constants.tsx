@@ -1,79 +1,65 @@
-const DATA_TEMPLATE = {
-    subscriptions: [
-      
-    ],
-    budgeting: [
-  
-    ],
-    cashflow: [
-  
-    ]
+type AnyMap = {
+  [key: string]: any
+}
+
+
+const SUBSCRIPTIONS_TEMPLATE: AnyMap = {
+  'name': '',
+  'billing': '',
+  'cost': '',
+  'card': '',
+  'utility': '',
+  'category': '',
+  // 'active?': false,
+  // 'months active': 0,
+  'x': '',
 }
 
 const SUBSCRIPTIONS_COLUMNS = [
     'name',
-    'billing period',
+    'billing',
     'cost',
     'card',
     'utility',
     'category',
-    'active?',
-    'time active'
+    // 'active?',
+    // 'months active'
+    'x',
 ]
 
 const BUDGETING_COLUMNS = [
     'name',
     'category',
-    'cost'
+    'cost',
+    'x',
 ]
+
+const BUDGETING_TEMPLATE: AnyMap = {
+  'name': '',
+  'category': '',
+  'cost': '',
+  'x': '',
+}
 
 const CASHFLOW_COLUMNS = [
-    'source',
-    'value'
+  'source',
+  'value',
+  'x',
 ]
 
-const DATA_TEMPLATE_EXAMPLE = {
-    subscriptions: [
-      {
-        'name': 'Netflix',
-        'billing period': 'Monthly',
-        'cost': '18',
-        'card': 'Amex',
-        'utility': 3,
-        'category': 'entertainment',
-        'active?': true,
-        'time active': 63
-      },
-      {
-        'name': 'Netflix',
-        'billing period': 'Monthly',
-        'cost': '18',
-        'card': 'Amex',
-        'utility': 3,
-        'category': 'entertainment',
-        'active?': true,
-        'time active': 63
-      },
-    ],
-    budgeting: [
-  
-    ],
-    cashflow: [
-      {
-          'source': 'income A',
-          'value': 3000
-      },
-      {
-          'source': 'tfsa',
-          'value': -1500
-      }
-    ]
+const CASHFLOW_TEMPLATE: AnyMap = {
+  'source': '',
+  'value': '',
+  'x': '',
 }
 
 export { 
-    DATA_TEMPLATE,
+    SUBSCRIPTIONS_TEMPLATE,
     SUBSCRIPTIONS_COLUMNS,
+
     BUDGETING_COLUMNS,
+    BUDGETING_TEMPLATE,
+
     CASHFLOW_COLUMNS,
-    DATA_TEMPLATE_EXAMPLE
+    CASHFLOW_TEMPLATE,
 }

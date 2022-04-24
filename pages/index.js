@@ -1,17 +1,20 @@
-import type { NextPage } from 'next'
 import { useState } from 'react'
 import Head from 'next/head'
-import { DATA_TEMPLATE_EXAMPLE } from '../constants'
 import Topbar from '../src/Topbar'
 import Subscriptions from '../src/Subscriptions'
 import Budgeting from '../src/Budgeting'
 import Cashflow from '../src/Cashflow'
 
-const Home: NextPage = () => {
-  const [data, setData] = useState(DATA_TEMPLATE_EXAMPLE);
+const Home = () => {
 
-  const subscriptionsProps = {
-    rows: data.subscriptions
+  // for lifting
+  const [ ts, setTs ] = useState(0);
+  const [ tb, setTb ] = useState(0);
+  const [ refresh, setRefresh ] = useState(false);
+
+  const handleChangeTs = (total) => {
+    setTs(total);
+    setRefresh(!refresh)
   }
 
   return (
@@ -27,13 +30,13 @@ const Home: NextPage = () => {
       {/* TODO: can abstract each layouts' content (left, centre, right) */}
       <div className="layout">
         <div className="layout--left">
-          <Subscriptions {...subscriptionsProps} />
+          <Subscriptions onChangeTotal={handleChangeTs} />
         </div>
         <div className="layout--centre">
-          <Budgeting />
+          <Budgeting onChangeTotal={setTb} />
         </div>
         <div className="layout--right">
-          <Cashflow />
+          <Cashflow ts={ts} tb={tb} />
         </div>
       </div>
 
