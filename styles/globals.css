@@ -188,3 +188,21 @@ input.cell:focus {
 .table td .x:hover {
   color: rgba(178, 0, 0, 0.427);
 }
+
+@media only screen and (max-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+
+  .layout--centre,
+  .layout--right {
+    border-style: solid none none none;
+    border-width: 1px;
+    border-color: var(--border-colour);
+  }
+
+  .block--inner-add {
+    margin-bottom: 10vw;
+  }
+}
