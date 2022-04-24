@@ -101,10 +101,10 @@ const Cashflow = (props: any) => {
     useEffect(() => {
         let total = 0
         for(let i = 0; i < rows.length; i++) {
-            total += parseInt(rows[i][CASHFLOW_COLUMNS[1]])
+            total += (rows[i][CASHFLOW_COLUMNS[1]] == '') ? 0 : parseInt(rows[i][CASHFLOW_COLUMNS[1]])
         }
         for(let i = 0; i < readOnlyRows.length; i++) {
-            total += (readOnlyRows[i][CASHFLOW_COLUMNS[1]] == '') ? 0 : parseInt(readOnlyRows[i][CASHFLOW_COLUMNS[1]])
+            total += parseInt(readOnlyRows[i][CASHFLOW_COLUMNS[1]])
         }
         setTotal(total);
         
