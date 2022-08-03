@@ -21,18 +21,18 @@ const Main = () => {
     })
     const [ categories, setCategories ] = useState<Array<any>>([{
         name: '',
-        color: '#000000',
+        color: '#ffffff',
         discriminant: ''
     }])
     const [ totalByCategory, setTotalByCategory ] = useState<any>({})
-    const [total, setTotal] = useState(0)
-    const [totalRows, setTotalRows] = useState(0)
+    const [ total, setTotal ] = useState(0)
+    const [ totalRows, setTotalRows ] = useState(0)
 
     const handleCreateCategory = () => {
         let currentCategories = JSON.parse(JSON.stringify(categories))
         currentCategories.push({
             name: '',
-            color: '#000000',
+            color: '#ffffff',
             discriminant: ''
         })
         setCategories(currentCategories)
@@ -40,7 +40,7 @@ const Main = () => {
 
     const handleChangeField = (field: string, index: number, value: string) => {
         let currentCategories = JSON.parse(JSON.stringify(categories))
-        currentCategories[index][field] = value        
+        currentCategories[index][field] = value.toLowerCase()
         setCategories(currentCategories)
     }
 
@@ -74,7 +74,13 @@ const Main = () => {
                         
                         const description = data[row][col]
                         for (let i = 0; i < categories.length; i++) {
-                            if (description.toLowerCase().includes(categories[i].discriminant.toLowerCase())) {
+                            let regex 
+                            try {
+                                regex = new RegExp(categories[i].discriminant)
+                            } catch (error) {
+                                console.error('regex error')
+                            }
+                            if (description.toLowerCase().match(regex)) {
                                 rowCategory = categories[i].name
                                 break;
                             }
@@ -141,11 +147,11 @@ const Main = () => {
                             <input style={{marginTop: "0.5rem"}} className="cell" type="text" value={meta.amountCol} onChange={(e)=>handleChangeMeta('amountCol', e.target.value.toUpperCase())} />
                         </div>
                         <div>
-                            Information column (letter)
+                            Info column (letter)
                             <input style={{marginTop: "0.5rem"}} className="cell" type="text" value={meta.infoCol} onChange={(e)=>handleChangeMeta('infoCol', e.target.value.toUpperCase())} />
                         </div>
                         <div>
-                            copy + paste (CSV)
+                            Statement CSV
                             <CSVReader onFileLoaded={(data, fileInfo) => {setData(data); console.log(fileInfo)}} />
                         </div>
                     </div>
@@ -175,7 +181,7 @@ const Main = () => {
                                         <input type="text" className="cell" onChange={(e)=>handleChangeField('name', index, e.target.value)} />
                                     </div>
                                     <div style={{display: "flex", flexDirection: 'column', gap: '0.5rem'}}>
-                                        discriminant
+                                        info col match (regex)
                                         <input type="text" className="cell" onChange={(e)=>handleChangeField('discriminant', index, e.target.value)} />
                                     </div>
                                 </div>
@@ -194,21 +200,22 @@ const Main = () => {
                     <B>breakdown</B>
                     <div style={{
                         paddingTop: '1rem',
-                        display: 'flex',
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr 4fr'
                     }}>
-                        <div style={{ flexGrow: 1 }}>
+                        <div>
                             # transactions
                             <div>
                                 {totalRows}
                             </div>
                         </div>
-                        <div style={{ flexGrow: 1 }}>
+                        <div>
                             total spent
                             <div>
                                 {total}
                             </div>
                         </div>
-                        <div style={{ flexGrow: 1 }}>
+                        <div>
                             by category
                             <div>
                                 {Object.keys(totalByCategory).map((key, index) => {
@@ -216,12 +223,14 @@ const Main = () => {
                                         <div key={index} style={{
                                             backgroundColor: categories.find((item) => item.name === key)?.color
                                         }}>
-                                            {key}: {totalByCategory[key]}
+                                            {key}: {totalByCategory[key]} ({((totalByCategory[key] / total) * 100).toFixed(1)}% total)
                                         </div>
                                     )
                                 })}
                             </div>
                         </div>
+                    </div>
+                    <div>
                     </div>
                 </div>
                 <div style={{
