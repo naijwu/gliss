@@ -143,8 +143,16 @@ a {
   transition: var(--transition-props);
 }
 
-.block--inner-add:hover {
+.block--inner-add:hover,
+.add:hover {
   opacity: 0.3;
+}
+.add {
+  display: table;
+  opacity: 0.18;
+  user-select: none;
+  cursor: pointer;
+  transition: var(--transition-props);
 }
 
 input.cell {
@@ -154,6 +162,10 @@ input.cell {
   outline: none;
   width: 100%;
   transition: var(--transition-props);
+}
+input[type="color"].cell {
+  padding: 0;
+  cursor: pointer;
 }
 
 input.cell:focus {

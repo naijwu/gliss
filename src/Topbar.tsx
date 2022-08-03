@@ -1,7 +1,9 @@
 
-const Topbar = () => {
+const Topbar = ({ type }: { type: string }) => {
 
     const handleSave = () => {
+        if (type === 'insight') return
+
         let payload = {
             subscriptions: sessionStorage.getItem("subscriptions"),
             budgeting: sessionStorage.getItem('budgeting'),
@@ -22,7 +24,7 @@ const Topbar = () => {
 
     return (
         <div className="topbar">
-            <span className="topbar--header" onClick={handleSave} style={{cursor: 'pointer'}}>
+            <span className="topbar--header" onClick={handleSave} style={{cursor: type === 'insight' ? 'default' : 'pointer'}}>
                 gliss.to
             </span>
         </div>

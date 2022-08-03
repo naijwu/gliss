@@ -1,76 +1,46 @@
 import { useEffect, useState } from 'react'
-import Table from "../components/Table"
-import { CASHFLOW_TEMPLATE, CASHFLOW_COLUMNS } from "../constants"
+import Table from "../../components/Template/Table"
+import { SUBSCRIPTIONS_COLUMNS, SUBSCRIPTIONS_TEMPLATE } from "../../constants"
 
-const Cashflow = (props: any) => {
-    const EMPTY_CASHFLOW: {
+const Subscriptions = ({ onChangeTotal }: any) => {
+    const EMPTY_SUBSCRIPTION: {
         [key: string]: any
       } = {
-          ...CASHFLOW_TEMPLATE
+          ...SUBSCRIPTIONS_TEMPLATE
     }
-    
-    const { ts, tb } = props;
 
     const initialize = () => {
         if(typeof window !== "undefined") {
-            let store = sessionStorage.getItem('cashflow')
+            let store = sessionStorage.getItem('subscriptions')
             if (store != null) {
                 return (JSON.parse(store))
             } else {
-                return ([EMPTY_CASHFLOW])
+                return ([EMPTY_SUBSCRIPTION])
             }
         } else {
-            return ([EMPTY_CASHFLOW])
+            return ([EMPTY_SUBSCRIPTION])
         }
     }
 
     useEffect(() => { 
         if(window) {
-            let store = sessionStorage.getItem('cashflow')
-            if (store) {
+            let store = sessionStorage.getItem('subscriptions')
+            if (store != null) {
                 setRows(JSON.parse(store))
             } else {
-                setRows([EMPTY_CASHFLOW])
+                setRows([EMPTY_SUBSCRIPTION])
             }
         }
     }, [])
 
-    const initializeAggregate = () => {
-        const template: Array<{
-            [key: string]: any
-          }> = [
-            {
-                'source': 'subscriptions',
-                'value': -ts,
-            },
-            {
-                'source': 'budgeting',
-                'value': -tb,
-            }
-        ];
-        
-        return template;
-    }
-
     const [rows, setRows] = useState(initialize);
-    const [readOnlyRows, setReadOnlyRows] = useState(initializeAggregate)
     const [refresh, setRefresh] = useState(false)
     const [total, setTotal] = useState(0)
-
-    useEffect(() => {
-        let updatedReadOnly = readOnlyRows
-
-        updatedReadOnly[0].value = -ts
-        updatedReadOnly[1].value = -tb
-
-        setReadOnlyRows(updatedReadOnly)
-        setRefresh(!refresh);
-    }, [readOnlyRows, ts, tb])
  
     const handleAddRow = () => {
         let updatedRow = rows;
         updatedRow.push({
-            ...CASHFLOW_TEMPLATE
+            ...SUBSCRIPTIONS_TEMPLATE
         })
         setRows(updatedRow)
         setRefresh(!refresh)
@@ -92,42 +62,39 @@ const Cashflow = (props: any) => {
 
     const tableProps = {
         data: rows,
-        columns: CASHFLOW_COLUMNS,
+        columns: SUBSCRIPTIONS_COLUMNS,
         fnEditCell: handleEditCell,
-        fnDeleteRow: handleDeleteRow,
-        readOnly: readOnlyRows
+        fnDeleteRow: handleDeleteRow
     }
 
     useEffect(() => {
-        let total = 0
+        let total = 0;
         for(let i = 0; i < rows.length; i++) {
-            total += (rows[i][CASHFLOW_COLUMNS[1]] == '') ? 0 : parseInt(rows[i][CASHFLOW_COLUMNS[1]])
-        }
-        for(let i = 0; i < readOnlyRows.length; i++) {
-            total += parseInt(readOnlyRows[i][CASHFLOW_COLUMNS[1]])
+            total += (rows[i][SUBSCRIPTIONS_COLUMNS[2]] == '') ? 0 : parseInt(rows[i][SUBSCRIPTIONS_COLUMNS[2]])
         }
         setTotal(total);
+        onChangeTotal(total);
         
-        sessionStorage.setItem('cashflow', JSON.stringify(rows));
-    }, [refresh, readOnlyRows, rows])
+        sessionStorage.setItem('subscriptions', JSON.stringify(rows));
+    }, [refresh, onChangeTotal, rows])
 
     return (
         <div className='block'>
             <div className='titlebar'>
                 <div className='titlebar--dot'></div>
                 <span className='titlebar--header'>
-                    cashflow
+                    subscriptions
                 </span>
             </div>
 
             <div className='block--inner'>
                 <Table {...tableProps} />
-                <span onClick={handleAddRow} className='block--inner-add'>+ add income or saving</span>
+                <span onClick={handleAddRow} className='block--inner-add'>+ add subscription</span>
             </div>
 
             <div className='footerbar'>
                 <span className='footerbar--key'>
-                    surplus
+                    total mo. cost
                 </span>
                 <span className='footerbar--value'>
                     ${total}
@@ -137,4 +104,4 @@ const Cashflow = (props: any) => {
     )
 }
 
-export default Cashflow
+export default Subscriptions

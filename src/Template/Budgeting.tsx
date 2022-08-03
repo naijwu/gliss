@@ -1,34 +1,34 @@
 import { useEffect, useState } from 'react'
-import Table from "../components/Table"
-import { SUBSCRIPTIONS_COLUMNS, SUBSCRIPTIONS_TEMPLATE } from "../constants"
+import Table from "../../components/Template/Table"
+import { BUDGETING_TEMPLATE, BUDGETING_COLUMNS } from "../../constants"
 
-const Subscriptions = ({ onChangeTotal }: any) => {
-    const EMPTY_SUBSCRIPTION: {
+const Budgeting = ({ onChangeTotal }: any) => {
+    const EMPTY_BUDGET: {
         [key: string]: any
       } = {
-          ...SUBSCRIPTIONS_TEMPLATE
+          ...BUDGETING_TEMPLATE
     }
 
     const initialize = () => {
         if(typeof window !== "undefined") {
-            let store = sessionStorage.getItem('subscriptions')
+            let store = sessionStorage.getItem('budgeting')
             if (store != null) {
                 return (JSON.parse(store))
             } else {
-                return ([EMPTY_SUBSCRIPTION])
+                return ([EMPTY_BUDGET])
             }
         } else {
-            return ([EMPTY_SUBSCRIPTION])
+            return ([EMPTY_BUDGET])
         }
     }
 
     useEffect(() => { 
         if(window) {
-            let store = sessionStorage.getItem('subscriptions')
+            let store = sessionStorage.getItem('budgeting')
             if (store != null) {
                 setRows(JSON.parse(store))
             } else {
-                setRows([EMPTY_SUBSCRIPTION])
+                setRows([EMPTY_BUDGET])
             }
         }
     }, [])
@@ -40,7 +40,7 @@ const Subscriptions = ({ onChangeTotal }: any) => {
     const handleAddRow = () => {
         let updatedRow = rows;
         updatedRow.push({
-            ...SUBSCRIPTIONS_TEMPLATE
+            ...BUDGETING_TEMPLATE
         })
         setRows(updatedRow)
         setRefresh(!refresh)
@@ -62,7 +62,7 @@ const Subscriptions = ({ onChangeTotal }: any) => {
 
     const tableProps = {
         data: rows,
-        columns: SUBSCRIPTIONS_COLUMNS,
+        columns: BUDGETING_COLUMNS,
         fnEditCell: handleEditCell,
         fnDeleteRow: handleDeleteRow
     }
@@ -70,26 +70,26 @@ const Subscriptions = ({ onChangeTotal }: any) => {
     useEffect(() => {
         let total = 0;
         for(let i = 0; i < rows.length; i++) {
-            total += (rows[i][SUBSCRIPTIONS_COLUMNS[2]] == '') ? 0 : parseInt(rows[i][SUBSCRIPTIONS_COLUMNS[2]])
+            total += (rows[i][BUDGETING_COLUMNS[2]] == '') ? 0 : parseInt(rows[i][BUDGETING_COLUMNS[2]])
         }
         setTotal(total);
         onChangeTotal(total);
         
-        sessionStorage.setItem('subscriptions', JSON.stringify(rows));
-    }, [refresh, onChangeTotal, rows])
+        sessionStorage.setItem('budgeting', JSON.stringify(rows));
+    }, [refresh, rows])
 
     return (
         <div className='block'>
             <div className='titlebar'>
                 <div className='titlebar--dot'></div>
                 <span className='titlebar--header'>
-                    subscriptions
+                    budgeting
                 </span>
             </div>
 
             <div className='block--inner'>
                 <Table {...tableProps} />
-                <span onClick={handleAddRow} className='block--inner-add'>+ add subscription</span>
+                <span onClick={handleAddRow} className='block--inner-add'>+ add budget item</span>
             </div>
 
             <div className='footerbar'>
@@ -104,4 +104,4 @@ const Subscriptions = ({ onChangeTotal }: any) => {
     )
 }
 
-export default Subscriptions
+export default Budgeting
